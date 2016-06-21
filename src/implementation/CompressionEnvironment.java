@@ -12,7 +12,7 @@ import main.StaticMethods.AxisTuple;
 
 public class CompressionEnvironment extends GeneticEnvironment{
 
-	public int maxCount = 2000;
+	public int maxCount = 3000;
 	public int count = 0;
 	public AxisTuple t;
 	public CompressionEnvironment(AxisTuple t){
@@ -20,7 +20,7 @@ public class CompressionEnvironment extends GeneticEnvironment{
 		objects = Collections.synchronizedList(new ArrayList<GeneticObject>());
 		objects.add(new CompressionObject(0, this));
 		objects.add(new CompressionObject(1, this));
-		for (int j = 0; j < 1; ++j){
+		for (int j = 0; j < 3; ++j){
 			for (int i = 0; i <= 255; i++){
 				objects.add(new CompressionObject(i, this));
 			}

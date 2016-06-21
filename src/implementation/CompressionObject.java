@@ -1,5 +1,6 @@
 package implementation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -35,12 +36,12 @@ public class CompressionObject extends GeneticObject {
 		matrix = new int[e.t.xAxis.length][e.t.yAxis.length];
 		for (int x = 0; x < e.t.xAxis.length; ++x) {
 			for (int y = 0; y < e.t.yAxis.length; ++y) {
-//				while (histCP[pos] == 0) {
-//					pos++;
-//					pos %= hist.length;
-//				}
-//				matrix[x][y] = pos;
-//				histCP[pos]--;
+				// while (histCP[pos] == 0) {
+				// pos++;
+				// pos %= hist.length;
+				// }
+				// matrix[x][y] = pos;
+				// histCP[pos]--;
 				matrix[x][y] = scalar;
 			}
 		}
@@ -81,27 +82,33 @@ public class CompressionObject extends GeneticObject {
 
 		}
 
-//		for (int x = xCorner1; x < xCorner2; ++x) {
-//			for (int y = yCorner1; y < yCorner2; ++y) {
-//				newMatrix[x][y] = other.matrix[x][y];
+		for (int x = xCorner1; x < xCorner2; ++x) {
+			for (int y = yCorner1; y < yCorner2; ++y) {
+				newMatrix[x][y] = other.matrix[x][y];
+			}
+		}
+//		for (int i = 0; i < 5; i++){
+//			if (rand.nextFloat() < 0.2f) {
+//				movePixel(rand, newMatrix);
 //			}
 //		}
-//		if (rand.nextFloat() < 0.5f) {
-//			movePixel(rand, newMatrix);
-//		}
-//		if (rand.nextFloat() < 0.1f) {
-//			changePixel(rand, newMatrix);
-//		}
-//
-		if (rand.nextFloat() < 0.1f) {
-			createRectangle(rand, newMatrix);
+		
+		// if (rand.nextFloat() < 0.1f) {
+		// changePixel(rand, newMatrix);
+		// }
+		//
+		for (int i = 0; i < 3; i++){
+			if (rand.nextFloat() < 0.3f) {
+				createRectangle(rand, newMatrix);
+			}
 		}
-//		if (rand.nextFloat() < 0.05f) {
-//			swapRectangle(rand, newMatrix);
-//		}
-//		if (rand.nextFloat() < 0.5f) {
-//			swapPixel(rand, newMatrix);
-//		}
+
+		// if (rand.nextFloat() < 0.01f) {
+		// swapRectangle(rand, newMatrix);
+		// }
+		// if (rand.nextFloat() < 0.5f) {
+		// swapPixel(rand, newMatrix);
+		// }
 
 		return new CompressionObject(newMatrix, e);
 	}
@@ -209,48 +216,54 @@ public class CompressionObject extends GeneticObject {
 		}
 	}
 
+	public class IntTuple {
+		public int i1;
+		public int i2;
+
+		public IntTuple(int i1, int i2) {
+			this.i1 = i1;
+			this.i2 = i2;
+		}
+	}
+
 	public void reAdjust() {
 		AxisTuple res = StaticMethods.calculateSumAndHist(matrix);
-		
+
 		int[] correct = e.t.histogram;
 		int[] mine = res.histogram;
-		
-		HashMap<Integer, Integer> negativeBalance = new HashMap<Integer, Integer>();
+
+		ArrayList<IntTuple> negativeBalance = new ArrayList<IntTuple>();
 		HashMap<Integer, Integer> positiveBalance = new HashMap<Integer, Integer>();
-		
-		for (int i = 0; i < correct.length; i++){
+
+		for (int i = 0; i < correct.length; i++) {
 			int balance = mine[i] - correct[i];
-			if (balance > 0){
+			if (balance > 0) {
 				positiveBalance.put(i, balance);
-			} else if (balance < 0){
-				negativeBalance.put(i, balance);
-			} 
+			} else if (balance < 0) {
+				negativeBalance.add(new IntTuple(i, balance));
+			}
 		}
 		Random rand = new Random();
-		int startX = rand.nextInt(matrix.length);
-		int startY = rand.nextInt(matrix[0].length);
-		
-//		for (int x = startX; x != startX - 1; x++, x%=matrix.length){
-//			for (int y = startY; y != startY - 1; y++, y%=matrix[0].length ){
-//				if (positiveBalance.get(matrix[x][y]) != null){
-//					int posBal = positiveBalance.get(matrix[x][y]);
-//					posBal--;
-//					if (posBal == 0)
-//						positiveBalance.remove(matrix[x][y]);
-//					else
-//						positiveBalance.put(matrix[x][y], posBal);
-//					
-//					int index = rand.nextInt(negativeBalance.size());
-//					matrix[x][y] = negativeBalance.get(index);
-//					int negBal = negativeBalance.get(index);
-//					if (negBal == 0)
-//						negativeBalance.remove(index);
-//					else
-//						negativeBalance.put(key, value)
-//				}
-//			}
-//		}
-//		out:
+		int startX = rand.nextInt(matrix.length - 1) + 1;
+		int startY = rand.nextInt(matrix[0].length - 1) + 1;
+
+		//System.out.println("work work");
+		for (int x = startX; x != startX - 1; x++, x %= matrix.length) {
+			for (int y = startY; y != startY - 1; y++, y %= matrix[0].length) {
+				if (positiveBalance.get(matrix[x][y]) != null && positiveBalance.get(matrix[x][y]) > 0) {
+					int posBal = positiveBalance.get(matrix[x][y]);
+					posBal--;
+					positiveBalance.put(matrix[x][y], posBal);
+
+					// int index = rand.nextInt(negativeBalance.size());
+					IntTuple sel = negativeBalance.get(rand.nextInt(negativeBalance.size()));
+					matrix[x][y] = sel.i1;
+					sel.i2--;
+					if (sel.i2 == 0)
+						negativeBalance.remove(sel);
+				}
+			}
+		}
 	}
 
 }

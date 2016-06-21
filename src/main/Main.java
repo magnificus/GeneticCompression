@@ -40,7 +40,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		img = new Image("gofug.png");
+		img = new Image("t2.png");
 
 		loadImageData(img);
 
@@ -51,7 +51,7 @@ public class Main extends Application {
 
 		ImageView iv1 = new ImageView(wImg);
 		StackPane p = new StackPane();
-		p.setPrefSize(500, 500);// set a default size for your stackpane
+		p.setPrefSize(50, 50);// set a default size for your stackpane
 
 		p.getChildren().add(iv1); // add imageView to stackPane
 		StackPane.setAlignment(iv1, Pos.CENTER);// set it to the Center

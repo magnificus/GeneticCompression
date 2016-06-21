@@ -1,18 +1,20 @@
 package main;
 
 public class StaticMethods {
-	public static final int histPenalty = 20;
+	public static final int histPenalty = 50;
 	
 	public static class AxisTuple {
 		public int[] xAxis;
 		public int[] yAxis;
 		public int[] diagAxis;
+		public int[] invDiagAxis;
 		public int[] histogram;
 
-		public AxisTuple(int[] xAxis, int[] yAxis, int[] diagAxis, int[] histogram) {
+		public AxisTuple(int[] xAxis, int[] yAxis, int[] diagAxis, int[] histogram, int[] invDiagAxis) {
 			this.xAxis = xAxis;
 			this.yAxis = yAxis;
 			this.diagAxis = diagAxis;
+			this.invDiagAxis = invDiagAxis;
 			this.histogram = histogram;
 		}
 	}
@@ -36,6 +38,8 @@ public class StaticMethods {
 			}
 			yAxis[y] = totY;
 		}
+		
+		// diagaxis
 		for (int c = 0; c < xAxis.length ; c++){
 			int totC = 0;
 			for (int c2 = c; c2 > 0 && c - c2 > 0; c2--){
@@ -52,6 +56,23 @@ public class StaticMethods {
 			diagAxis[c + xAxis.length] = totC;
 		}
 
+		// invdiagaxis
+		
+		for (int c = 0; c < xAxis.length ; c++){
+			int totC = 0;
+			for (int c2 = c; c2 > 0 && c - c2 > 0; c2--){
+				totC += matrix[c2][c-c2];
+			}
+			diagAxis[c] = totC;
+		}
+		
+		for (int c = 0; c < yAxis.length ; c++){
+			int totC = 0;
+			for (int c2 = c; c2 > 0 && xAxis.length - c2 > 0; c2--){
+				totC += matrix[xAxis.length-c][c2];
+			}
+			diagAxis[c + xAxis.length] = totC;
+		}
 
 		return new AxisTuple(xAxis, yAxis, diagAxis, null);
 
