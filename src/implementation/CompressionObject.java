@@ -1,12 +1,13 @@
 package implementation;
 
+import imageMain.StaticMethods;
+import imageMain.StaticMethods.AxisTuple;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 import genetic.GeneticObject;
-import main.StaticMethods;
-import main.StaticMethods.AxisTuple;
 
 public class CompressionObject extends GeneticObject {
 	public int[][] matrix;

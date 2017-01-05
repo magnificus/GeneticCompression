@@ -1,5 +1,7 @@
 package implementation;
 
+import imageMain.StaticMethods.AxisTuple;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -7,7 +9,6 @@ import java.util.Random;
 import genetic.GeneticComp;
 import genetic.GeneticEnvironment;
 import genetic.GeneticObject;
-import main.StaticMethods.AxisTuple;
 
 
 public class CompressionEnvironment extends GeneticEnvironment{

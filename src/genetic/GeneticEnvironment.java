@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class GeneticEnvironment {
 	
+	// on average 1/cullingconstant entities are removed each generation
 	public static final int cullingConstant = 5;
 
 
@@ -70,7 +71,7 @@ public abstract class GeneticEnvironment {
 			}
 		}
 		
-		System.out.print("Average: " + average + " Best: " + best);
+		System.out.print("Average: " + average + " Best: " + best + " " + objects.get(0));
 		return best;
 	}
 }

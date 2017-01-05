@@ -1,4 +1,4 @@
-package main;
+package imageMain;
 
 public class StaticMethods {
 	public static final int histPenalty = 50;
@@ -10,7 +10,7 @@ public class StaticMethods {
 		public int[] invDiagAxis;
 		public int[] histogram;
 
-		public AxisTuple(int[] xAxis, int[] yAxis, int[] diagAxis, int[] histogram, int[] invDiagAxis) {
+		public AxisTuple(int[] xAxis, int[] yAxis, int[] diagAxis, int[] histogram) {
 			this.xAxis = xAxis;
 			this.yAxis = yAxis;
 			this.diagAxis = diagAxis;

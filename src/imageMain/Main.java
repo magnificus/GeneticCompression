@@ -1,10 +1,11 @@
-package main;
+package imageMain;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 
+import imageMain.StaticMethods.AxisTuple;
 import implementation.CompressionEnvironment;
 import javafx.application.Application;
 import javafx.concurrent.Task;
@@ -22,7 +23,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import main.StaticMethods.AxisTuple;
 
 public class Main extends Application {
 	private Image img;
@@ -61,10 +61,6 @@ public class Main extends Application {
 		stage.show();
 
 		decrypt(stage, e, pW);
-
-		// updateImage(e, pW);
-		// stage.show();
-		// System.out.println(img.getWidth());
 
 	}
 
