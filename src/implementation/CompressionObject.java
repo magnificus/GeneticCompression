@@ -267,4 +267,10 @@ public class CompressionObject extends GeneticObject {
 		}
 	}
 
+	@Override
+	public void normalize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

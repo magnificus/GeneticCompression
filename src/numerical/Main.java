@@ -6,11 +6,13 @@ import text.TextCompEnvironment;
 public class Main {
 	public static Solution sol;
 	public static int length;
+	public static final int cleanupInterval = 1000;
 	public static final int maxRuns = 100000;
 
 	// try sum
 
 	public static void main(String[] args) {
+		
 		NumericalEnvironment env = new NumericalEnvironment();
 		
 		for (int i = 0; i < maxRuns; i++){
@@ -29,7 +31,10 @@ public class Main {
 //			public void run() {
 				for (int i = 0; i < maxRuns; i++) {
 					e.SimulationTick();
-					calcPrintTime(pre, i, maxRuns);
+//					if (i % 1000 == 0){
+						calcPrintTime(pre, i, maxRuns);
+//						e.normalize();
+//					}
 
 				}
 //

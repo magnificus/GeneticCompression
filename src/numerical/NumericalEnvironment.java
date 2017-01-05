@@ -10,30 +10,37 @@ import genetic.GeneticObject;
 
 public class NumericalEnvironment extends GeneticEnvironment{
 	
-	public double[] input;
-	public double[] correct;
+	public int[] input;
+	public int[] correct;
 	
 	
-	public static final int size = 200;
+	public static final int size = 10000;
 	
 	public static final int numberObjects = 10000;
 	
 	public NumericalEnvironment(){
-		input = new double[size];
-		correct = new double[size];
+		input = new int[size];
+		correct = new int[size];
 		
 		for (int i = 0; i < size; i++){
-			int j = i*2;
+			int j = 2*i;
 			input[i] = j;
-			correct[i] = j % 44 * 5 + 2 / 132;
+			correct[i] = (int) Math.log(j);
+			
 		}
 		
 		objects = Collections.synchronizedList(new ArrayList<GeneticObject>());
 		for (int i = 0; i < numberObjects; i++){
 			NumericalObject n = new NumericalObject(this);
-			n.calcFitness();
 			objects.add(n);
 		}
+	}
+
+	public void normalize() {
+		for (GeneticObject o : objects){
+			o.normalize();
+		}
+		
 	}
 
 }

@@ -16,6 +16,8 @@ public abstract class GeneticEnvironment {
 
 	protected List<GeneticObject> objects;
 	
+	public static final boolean useMultiThread = true;
+	
 	public double SimulationTick(){
 		Collections.sort(objects, new GeneticComp());
 		List<GeneticObject> winners = new ArrayList<GeneticObject>();
@@ -55,7 +57,7 @@ public abstract class GeneticEnvironment {
 			}
 		};
 		
-		int availableProc = Runtime.getRuntime().availableProcessors();
+		int availableProc = useMultiThread ? Runtime.getRuntime().availableProcessors() : 1;
 		Thread[] threads = new Thread[availableProc];
 		
 		for (int i = 0; i < availableProc; i++){

@@ -42,4 +42,10 @@ public class TextGeneticObject extends GeneticObject{
 		return currString;
 	}
 
+	@Override
+	public void normalize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
