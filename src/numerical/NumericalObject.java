@@ -4,13 +4,13 @@ import genetic.GeneticObject;
 
 import java.util.Random;
 
-import numerical.Operator.Value;
+import numerical.Operator.Top;
 
 public class NumericalObject extends GeneticObject{
 
 	//public ArrayList<Operator> operators;
 	
-	public Operator top;
+	public Top top;
 	public NumericalEnvironment env;
 	
 	public double fitness;
@@ -30,20 +30,23 @@ public class NumericalObject extends GeneticObject{
 	}
 	
 	private void calcFitness(){
-		int[] correct = env.correct;
-		int[] input = env.input;
+		double[] correct = env.correct;
+		double[] input = env.input;
 		
 		double tot = 0;
-		for (int i = 0; i < input.length; i++){
-			tot += Math.pow(top.operate(input[i]) - correct[i], 2);
+		for (int i = 1; i < input.length; i++){
+			tot += Math.pow(((top.operate(input[i])  - correct[i]) / correct[i]), 2);
 		}
-		fitness =  tot + top.getSize() * 100;
+		fitness =  tot + top.getSize() * 0.1;
 	}
 
 	@Override
 	public GeneticObject combineWith(GeneticObject o) {
+		NumericalObject other = (NumericalObject) o;
 		NumericalObject n = new NumericalObject(env);
-		n.top = top.duplicate(null);
+		n.top = (Top) top.duplicate(null);
+		if (other.top.next.left != null)
+			n.top.next.left = other.top.next.left.duplicate(n.top.next);
 		n.mutate();
 		n.calcFitness();
 		return n;

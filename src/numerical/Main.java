@@ -14,8 +14,14 @@ public class Main {
 	public static void main(String[] args) {
 		
 		NumericalEnvironment env = new NumericalEnvironment();
+//		
+//		System.out.println(Math.log(2132));
+//		System.out.println((4  << (((2132  >> -24 )  + (-3  + 2132 ) )  / 2132 ) ));
 		
+		System.out.println();
+//		double input = 
 		for (int i = 0; i < maxRuns; i++){
+
 			execute(env);
 			
 		}
