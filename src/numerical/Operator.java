@@ -133,8 +133,8 @@ public abstract class Operator {
 
 		@Override
 		public void mutate(Random r) {
-			if (r.nextFloat() < 0.05) {
-				int res = r.nextInt(10);
+			if (r.nextFloat() < 0.01) {
+				int res = r.nextInt(9);
 				Operator newO = null;
 
 				switch (res) {
@@ -168,6 +168,8 @@ public abstract class Operator {
 				case 9:
 					newO = new Cos(parent);
 					break;
+				case 10:
+					newO = new Sqrt(parent);
 				
 				}
 				parent.attachChild(this, newO);
@@ -181,7 +183,7 @@ public abstract class Operator {
 				}
 			}
 
-			if (r.nextFloat() < 0.01) {
+			if (r.nextFloat() < 0.02) {
 				useInput = !useInput;
 				value = r.nextDouble()*100 - 50;
 			} else if (!useInput && r.nextFloat() < 0.03) {
@@ -257,12 +259,21 @@ public abstract class Operator {
 		}
 
 		public String toString() {
-			return "((int)" + left + " << (int)" + right + "(int)) ";
+			return "((int)" + left + " << (int)" + right + ") ";
 		}
 
 		@Override
 		public double operate(double in) {
 			return (int) left.operate(in) << (int) right.operate(in);
+		}
+		
+		@Override
+		public void normalize(){
+			if (left instanceof Value){
+				((Value) left).value = (int) ((Value) left).value;
+			} if (right instanceof Value){
+				((Value) right).value = (int) ((Value) right).value;
+			}
 		}
 	}
 	
@@ -281,6 +292,15 @@ public abstract class Operator {
 		@Override
 		public double operate(double in) {
 			return (int) left.operate(in) >> (int) right.operate(in);
+		}
+		
+		@Override
+		public void normalize(){
+			if (left instanceof Value){
+				((Value) left).value = (int) ((Value) left).value;
+			} if (right instanceof Value){
+				((Value) right).value = (int) ((Value) right).value;
+			}
 		}
 	}
 	
@@ -311,7 +331,7 @@ public abstract class Operator {
 		}
 
 		public String toString() {
-			return "((int)" + left + " | " + right + "(int)) ";
+			return "((int)" + left + " | (int)" + right + ") ";
 		}
 
 		@Override
@@ -329,12 +349,21 @@ public abstract class Operator {
 		}
 
 		public String toString() {
-			return "((int)" + left + " ^ " + right + "(int)) ";
+			return "((int)" + left + " ^ (int)" + right + ") ";
 		}
 
 		@Override
 		public double operate(double in) {
 			return (int) left.operate(in) ^ (int) right.operate(in);
+		}
+		
+		@Override
+		public void normalize(){
+			if (left instanceof Value){
+				((Value) left).value = Math.floor(((Value) left).value);
+			} if (right instanceof Value){
+				((Value) right).value = Math.floor(((Value) right).value);
+			}
 		}
 	}
 	
@@ -347,12 +376,21 @@ public abstract class Operator {
 		}
 
 		public String toString() {
-			return "((int)" + left + " & " + right + "(int)) ";
+			return "((int)" + left + " & (int)" + right + ") ";
 		}
 
 		@Override
 		public double operate(double in) {
 			return (int) left.operate(in) & (int) right.operate(in);
+		}
+		
+		@Override
+		public void normalize(){
+			if (left instanceof Value){
+				((Value) left).value = Math.floor(((Value) left).value);
+			} if (right instanceof Value){
+				((Value) right).value = Math.floor(((Value) right).value);
+			}
 		}
 	}
 
@@ -365,41 +403,73 @@ public abstract class Operator {
 		}
 
 		public String toString() {
-			return "((int)" + left + " % " + right + "(int)) ";
+			return "((int)" + left + " % (int)" + right + ") ";
 		}
 
 		@Override
 		public double operate(double in) {
 			return left.operate(in) % (right.operate(in) != 0 ? right.operate(in) : 1);
 		}
+		
+		@Override
+		public void normalize(){
+			if (left instanceof Value){
+				((Value) left).value = Math.floor(((Value) left).value);
+			} if (right instanceof Value){
+				((Value) right).value = Math.floor(((Value) right).value);
+			}
+		}
 
 	}
+	
+	public static class Sqrt extends Operator {
+		public Sqrt(){
+			
+		}
+		public Sqrt(Operator parent) {
+			super(parent);
+		}
+
+		public String toString() {
+			return "sqrt("+left+")";
+		}
+
+		@Override
+		public double operate(double in) {
+			//return in;
+			return Math.sqrt(in);
+		}
+	}
+	
+	//public static class P
 
 	public double getSize() {
 		return left.getSize() + right.getSize() + 1;
 	}
 
 	public void mutate(Random r) {
-		if (r.nextFloat() < 0.05f) {
+		if (r.nextFloat() < 0.1) {
 			left = new Value(r.nextDouble()*100 - 50, r.nextBoolean(), this);
 			// remove kiddo left
-		} else if (r.nextFloat() < 0.05f) {
+		} else if (r.nextFloat() < 0.1) {
 			right = new Value(r.nextDouble()*100 - 50, r.nextBoolean(), this);
 			// remove kiddo right
 
 		}
-		if (r.nextFloat() < 0.05f){
-			//swap it 
-			Operator tempRight = right;
-			Operator tempLeft = left;
-			
-			
-		}
+//		if (r.nextFloat() < 0.05f){
+//			//swap it 
+//			Operator tempRight = right;
+//			Operator tempLeft = left;
+//			
+//			
+//		}
 		left.mutate(r);
 		right.mutate(r);
 	}
 
 	public void normalize() {
+		left.normalize();
+		right.normalize();
 //		if (left instanceof Value && right instanceof Value){
 //			boolean canEliminate = left.v
 //		}

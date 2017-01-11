@@ -37,12 +37,6 @@ public class CompressionObject extends GeneticObject {
 		matrix = new int[e.t.xAxis.length][e.t.yAxis.length];
 		for (int x = 0; x < e.t.xAxis.length; ++x) {
 			for (int y = 0; y < e.t.yAxis.length; ++y) {
-				// while (histCP[pos] == 0) {
-				// pos++;
-				// pos %= hist.length;
-				// }
-				// matrix[x][y] = pos;
-				// histCP[pos]--;
 				matrix[x][y] = scalar;
 			}
 		}

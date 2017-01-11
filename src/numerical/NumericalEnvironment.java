@@ -25,7 +25,7 @@ public class NumericalEnvironment extends GeneticEnvironment{
 		for (int i = 1; i < size; i++){
 			int j = i;
 			input[i] = j;
-			correct[i] = j * 100 + 44 % 5;
+			correct[i] = (1 / Math.sqrt(j)) * 22 * 233 * Math.cos(j);
 		}
 		
 		objects = Collections.synchronizedList(new ArrayList<GeneticObject>());

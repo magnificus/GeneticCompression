@@ -35,7 +35,7 @@ public class NumericalObject extends GeneticObject{
 		
 		double tot = 0;
 		for (int i = 1; i < input.length; i++){
-			tot += Math.pow(((top.operate(input[i])  - correct[i]) / correct[i]), 2);
+			tot += Math.pow(((top.operate(input[i])  - correct[i])), 2) /Math.abs(correct[i]);
 		}
 		fitness =  tot + top.getSize() * 0.1;
 	}
