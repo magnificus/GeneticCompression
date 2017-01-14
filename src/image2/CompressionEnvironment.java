@@ -10,7 +10,7 @@ import genetic.GeneticObject;
 
 public class CompressionEnvironment extends GeneticEnvironment {
 
-	public int maxCount = 200;
+	public int maxCount = 300;
 	public int count = 0;
 	public int[][] matrix;
 

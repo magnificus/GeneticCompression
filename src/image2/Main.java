@@ -25,7 +25,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		img = new Image("testimage.png");
+		img = new Image("circlcard.png");
 
 		loadImageData(img);
 
@@ -98,6 +98,7 @@ public class Main extends Application {
 		for (int x = 0; x < img.getWidth(); ++x) {
 			for (int y = 0; y < img.getHeight(); ++y) {
 				double color = Math.min(1, (double) best[x][y] / 255);
+				color = Math.max(0, color);
 				pW.setColor(x, y,
 						new Color(color, color, color, 1));
 				// pW.setColor(x, y, new Color(pReader.getColor(x, y).getRed(),
