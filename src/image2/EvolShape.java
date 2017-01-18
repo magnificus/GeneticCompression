@@ -15,6 +15,18 @@ import java.util.Random;
 public abstract class EvolShape {
 	public int[] strength;
 
+	public static final int POLYGON_MAX_POINTS = 10;
+	public static final int POLYGON_MIN_POINTS = 3;
+
+	public static final int MUTATION_COLOR_MAX_DISTANCE = 50;
+	public static final int MUTATION_DISTANCE_MAX_DISTANCE = 400;
+	
+	public static final float MUTATION_COLOR_CHANCE = 0.01f;
+	public static final float MUTATION_POLYGON_REMOVE_POINT_CHANCE = 0.03f;
+	public static final float MUTATION_POLYGON_ADD_POINT_CHANCE = 0.03f;
+	public static final float MUTATION_POLYGON_MOVE_CHANCE = 0.01f;
+	
+
 	public abstract void apply(int[][][] matrix);
 
 	public EvolShape(int[] strength) {
@@ -140,101 +152,6 @@ public abstract class EvolShape {
 	//
 	// }
 
-	public static class EvolPolygon extends EvolShape {
-		public Polygon p;
-
-		public EvolPolygon(int[] strength, Polygon p) {
-			super(strength);
-			this.p = p;
-		}
-
-		@Override
-		public void apply(int[][][] matrix) {
-			Rectangle bounds = p.getBounds();
-			for (int x = bounds.x; x < bounds.width + bounds.x; x++) {
-				for (int y = bounds.y; y < bounds.height + bounds.y; y++) {
-					if (p.contains(x, y)) {
-						matrix[x][y][0] += strength[0];
-						matrix[x][y][1] += strength[1];
-						matrix[x][y][2] += strength[2];
-
-					}
-				}
-			}
-
-		}
-
-		@Override
-		public EvolShape duplicate() {
-			Polygon nP = new Polygon();
-			for (int i = 0; i < p.npoints; i++) {
-				nP.addPoint(p.xpoints[i], p.ypoints[i]);
-			}
-			int[] str = new int[] { strength[0], strength[1], strength[2] };
-			return new EvolPolygon(str, nP);
-		}
-
-		@Override
-		public void mutate(Random r) {
-			if (r.nextFloat() < 0.01f) {
-				strength[0] += r.nextInt(50) - 25;
-			}
-			if (r.nextFloat() < 0.01f) {
-				strength[1] += r.nextInt(50) - 25;
-			}
-			if (r.nextFloat() < 0.01f) {
-				strength[2] += r.nextInt(50) - 25;
-			}
-			int xLen = Main.correctMatrix.length;
-			int yLen = Main.correctMatrix[0].length;
-
-			// remove point in polygon chain
-			if (r.nextFloat() < 0.05f && p.npoints > 3) {
-				int pos = r.nextInt(p.npoints);
-				Polygon newP = new Polygon();
-
-				for (int i = 0; i < p.npoints; i++) {
-					if (i != pos) {
-						newP.addPoint(p.xpoints[i], p.ypoints[i]);
-					}
-				}
-
-				p = newP;
-			}
-
-			// add point in polygon chain
-
-			if (r.nextFloat() < 0.05f && p.npoints < 10) {
-				int pos = r.nextInt(p.npoints - 1) + 1;
-				Polygon newP = new Polygon();
-
-				for (int i = 0; i < p.npoints; i++) {
-					if (i == pos) {
-						newP.addPoint(Math.min(xLen, Math.max(0, p.xpoints[i - 1] + r.nextInt(400) - 200)),
-								Math.min(yLen, Math.max(0, p.ypoints[i - 1] + r.nextInt(400) - 200)));
-
-					}
-					newP.addPoint(p.xpoints[i], p.ypoints[i]);
-
-				}
-				p = newP;
-
-			}
-
-			// potentially move polygon slightly
-			for (int i = 0; i < p.npoints; i++) {
-				if (r.nextFloat() < 0.01f) {
-					p.xpoints[i] = Math.min(xLen, Math.max(0, p.xpoints[i] + r.nextInt(50) - 25));
-				}
-				if (r.nextFloat() < 0.01f) {
-					p.ypoints[i] = Math.min(yLen, Math.max(0, p.ypoints[i] + r.nextInt(50) - 25));
-
-				}
-			}
-		}
-
-	}
-
 	// public static class EvolTriangle extends EvolShape {
 	// public Point p1;
 	// public Point p2;
@@ -326,6 +243,103 @@ public abstract class EvolShape {
 	//
 	// }
 
+	public static class EvolPolygon extends EvolShape {
+		public Polygon p;
+
+		public EvolPolygon(int[] strength, Polygon p) {
+			super(strength);
+			this.p = p;
+		}
+
+		@Override
+		public void apply(int[][][] matrix) {
+			Rectangle bounds = p.getBounds();
+			for (int x = bounds.x; x < bounds.width + bounds.x; x++) {
+				for (int y = bounds.y; y < bounds.height + bounds.y; y++) {
+					if (p.contains(x, y)) {
+						matrix[x][y][0] += strength[0];
+						matrix[x][y][1] += strength[1];
+						matrix[x][y][2] += strength[2];
+
+					}
+				}
+			}
+
+		}
+
+		@Override
+		public EvolShape duplicate() {
+			Polygon nP = new Polygon();
+			for (int i = 0; i < p.npoints; i++) {
+				nP.addPoint(p.xpoints[i], p.ypoints[i]);
+			}
+			int[] str = new int[] { strength[0], strength[1], strength[2] };
+			return new EvolPolygon(str, nP);
+		}
+
+		@Override
+		public void mutate(Random r) {
+			
+			// mutate color
+			if (r.nextFloat() < MUTATION_COLOR_CHANCE) {
+				strength[0] += r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2;
+			}
+			if (r.nextFloat() < MUTATION_COLOR_CHANCE) {
+				strength[1] += r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2;
+			}
+			if (r.nextFloat() < MUTATION_COLOR_CHANCE) {
+				strength[2] += r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2;
+			}
+			int xLen = Main.correctMatrix.length;
+			int yLen = Main.correctMatrix[0].length;
+
+			// remove point in polygon chain
+			if (r.nextFloat() < MUTATION_POLYGON_REMOVE_POINT_CHANCE && p.npoints > POLYGON_MIN_POINTS) {
+				int pos = r.nextInt(p.npoints);
+				Polygon newP = new Polygon();
+
+				for (int i = 0; i < p.npoints; i++) {
+					if (i != pos) {
+						newP.addPoint(p.xpoints[i], p.ypoints[i]);
+					}
+				}
+
+				p = newP;
+			}
+
+			// add point in polygon chain
+
+			if (r.nextFloat() < MUTATION_POLYGON_ADD_POINT_CHANCE && p.npoints < POLYGON_MAX_POINTS) {
+				int pos = r.nextInt(p.npoints - 1) + 1;
+				Polygon newP = new Polygon();
+
+				for (int i = 0; i < p.npoints; i++) {
+					if (i == pos) {
+						newP.addPoint(Math.min(xLen, Math.max(0, p.xpoints[i - 1] + r.nextInt(MUTATION_DISTANCE_MAX_DISTANCE) - MUTATION_DISTANCE_MAX_DISTANCE/2)),
+								Math.min(yLen, Math.max(0, p.ypoints[i - 1] + r.nextInt(MUTATION_DISTANCE_MAX_DISTANCE) - MUTATION_DISTANCE_MAX_DISTANCE/2)));
+
+					}
+					newP.addPoint(p.xpoints[i], p.ypoints[i]);
+
+				}
+				p = newP;
+
+			}
+
+			// potentially move polygon slightly
+			for (int i = 0; i < p.npoints; i++) {
+				if (r.nextFloat() < MUTATION_POLYGON_MOVE_CHANCE) {
+					p.xpoints[i] = Math.min(xLen, Math.max(0, p.xpoints[i] + r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2));
+				}
+				if (r.nextFloat() < MUTATION_POLYGON_MOVE_CHANCE) {
+					p.ypoints[i] = Math.min(yLen, Math.max(0, p.ypoints[i] + r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2));
+
+				}
+			}
+		}
+
+	}
+
 	/**
 	 * Returns a new randomized shape, which might later evolve further, for
 	 * now, only polygons.
@@ -342,12 +356,13 @@ public abstract class EvolShape {
 		switch (type) {
 		case 0: {
 			Polygon p = new Polygon();
-			int nPoints = r.nextInt(7) + 3;
+			int nPoints = r.nextInt(POLYGON_MAX_POINTS - POLYGON_MIN_POINTS) + POLYGON_MIN_POINTS;
 			Point prev = new Point(r.nextInt(xLen), r.nextInt(yLen));
 			p.addPoint(prev.x, prev.y);
 
 			for (int i = 0; i < nPoints; i++) {
-				prev = new Point(Math.min(xLen, Math.max(0, prev.x + r.nextInt(100) - 50)), Math.min(yLen, Math.max(0, prev.y + r.nextInt(100) - 50)));
+				prev = new Point(Math.min(xLen, Math.max(0, prev.x + r.nextInt(MUTATION_DISTANCE_MAX_DISTANCE) - MUTATION_DISTANCE_MAX_DISTANCE / 2)),
+						Math.min(yLen, Math.max(0, prev.y + r.nextInt(MUTATION_DISTANCE_MAX_DISTANCE) - MUTATION_DISTANCE_MAX_DISTANCE / 2)));
 				p.addPoint(prev.x, prev.y);
 			}
 			return new EvolPolygon(strength, p);

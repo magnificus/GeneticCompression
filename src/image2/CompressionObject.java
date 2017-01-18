@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class CompressionObject extends GeneticObject {
 
-	public static final int numShapes = 45;
+	public static final int NUMBER_SHAPES = 30;
 
 	public double fitness;
 	// public int[][] matrix;
@@ -20,7 +20,7 @@ public class CompressionObject extends GeneticObject {
 	public CompressionObject() {
 		shapes = new ArrayList<EvolShape>();
 		Random r = new Random();
-		for (int i = 0; i < numShapes; i++) {
+		for (int i = 0; i < NUMBER_SHAPES; i++) {
 			shapes.add(EvolShape.getNewShape(r));
 		}
 		calculateFitness();
@@ -61,31 +61,24 @@ public class CompressionObject extends GeneticObject {
 	public GeneticObject combineWith(GeneticObject o) {
 		List<EvolShape> newShapes = new ArrayList<EvolShape>();
 		Random r = new Random();
-		for (int i = 0; i < numShapes/2 && i < shapes.size(); i++){
+		for (int i = 0; i < NUMBER_SHAPES/2 && i < shapes.size(); i++){
 			EvolShape s1 = shapes.get(i).duplicate();
 			s1.mutate(r);
 			newShapes.add(s1);
 		}
 
-		 CompressionObject other = (CompressionObject) o;
-		for (int i = numShapes/2; i < numShapes && i < other.shapes.size(); i++){
+		CompressionObject other = (CompressionObject) o;
+		for (int i = NUMBER_SHAPES/2; i < NUMBER_SHAPES && i < other.shapes.size(); i++){
 			EvolShape s1 = other.shapes.get(i).duplicate();
 			s1.mutate(r);
 			newShapes.add(s1);
 		}
-		// for (Shape s : other.shapes){
-		// if (r.nextFloat() < 0.5f && newShapes.size() < numShapes){
-		// Shape s1 = s.duplicate();
-		// s1.mutate(r);
-		// newShapes.add(s1);
-		// }
-		// }
 
 
 		if (r.nextFloat() < 0.5f && !newShapes.isEmpty()) {
 			newShapes.remove(r.nextInt(newShapes.size()));
 		}
-		if (newShapes.size() < numShapes && r.nextFloat() > 0.5f) {
+		if (newShapes.size() < NUMBER_SHAPES && r.nextFloat() > 0.5f) {
 			newShapes.add(EvolShape.getNewShape(r));
 		}
 

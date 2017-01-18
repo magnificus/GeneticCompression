@@ -3,7 +3,6 @@ package image2;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.concurrent.Task;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,7 +24,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		img = new Image("Lenna.png");
+		img = new Image("circlcard.png");
 
 		loadImageData(img);
 
@@ -36,12 +35,8 @@ public class Main extends Application {
 
 		ImageView iv1 = new ImageView(wImg);
 		StackPane p = new StackPane();
-//		p.setPrefSize(100, 100);// set a default size for your stackpane
 
 		p.getChildren().add(iv1); // add imageView to stackPane
-//		StackPane.setAlignment(iv1, Pos.CENTER);// set it to the Center
-												// Left(by default it's
-												// on the center)
 		stage.setScene(new Scene(p));
 		stage.show();
 
@@ -113,9 +108,6 @@ public class Main extends Application {
 				blue = Math.max(0, blue);
 				pW.setColor(x, y,
 						new Color(red, green, blue, 1));
-				// pW.setColor(x, y, new Color(pReader.getColor(x, y).getRed(),
-				// pReader.getColor(x, y).getRed(),
-				// pReader.getColor(x, y).getRed(), 1));
 			}
 		}
 	}

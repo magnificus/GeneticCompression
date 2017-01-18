@@ -11,7 +11,6 @@ import genetic.GeneticObject;
 public class CompressionEnvironment extends GeneticEnvironment {
 
 	public int nbrObjects = 300;
-	public int count = 0;
 	public int[][] matrix;
 
 	public CompressionEnvironment() {
@@ -25,14 +24,6 @@ public class CompressionEnvironment extends GeneticEnvironment {
 	public int[][][] getBest() {
 		Collections.sort(objects, new GeneticComp());
 		return ((CompressionObject) objects.get(0)).getMatrix();
-	}
-
-	@Override
-	public double SimulationTick() {
-		count++;
-
-		return super.SimulationTick();
-
 	}
 
 }
