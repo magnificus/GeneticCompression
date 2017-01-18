@@ -26,10 +26,14 @@ public abstract class GeneticEnvironment {
 		Random rand = new Random();
 		
 		double average = 0;
+		// the entry with best fitness
 		double best = objects.get(0).getFitness();
 		
 
+		
 		winners.add(objects.get(0));
+		
+		// decide, with a random factor, which entries lives and which dies, but where worse entries have a higher chance to die
 		average += objects.get(0).getFitness();
 		for (int i = 1; i < objects.size(); i++){
 			average += objects.get(i).getFitness();

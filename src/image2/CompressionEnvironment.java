@@ -10,19 +10,19 @@ import genetic.GeneticObject;
 
 public class CompressionEnvironment extends GeneticEnvironment {
 
-	public int maxCount = 300;
+	public int nbrObjects = 300;
 	public int count = 0;
 	public int[][] matrix;
 
 	public CompressionEnvironment() {
 		objects = Collections.synchronizedList(new ArrayList<GeneticObject>());
-		for (int i = 0; i < maxCount; i++) {
+		for (int i = 0; i < nbrObjects; i++) {
 			objects.add(new CompressionObject());
 		}
 
 	}
 
-	public int[][] getBest() {
+	public int[][][] getBest() {
 		Collections.sort(objects, new GeneticComp());
 		return ((CompressionObject) objects.get(0)).getMatrix();
 	}
@@ -31,14 +31,6 @@ public class CompressionEnvironment extends GeneticEnvironment {
 	public double SimulationTick() {
 		count++;
 
-		// if (count == maxCount){
-		// for (GeneticObject c : objects){
-		// CompressionObject o = (CompressionObject) c;
-		// o.reAdjust();
-		// }
-		//
-		// count = 0;
-		// }
 		return super.SimulationTick();
 
 	}

@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class CompressionObject extends GeneticObject {
 
-	public static final int numShapes = 10;
+	public static final int numShapes = 45;
 
 	public double fitness;
 	// public int[][] matrix;
@@ -32,11 +32,15 @@ public class CompressionObject extends GeneticObject {
 	}
 
 	private void calculateFitness() {
-		int[][] matrix = getMatrix();
+		int[][][] matrix = getMatrix();
 		long tot = 0;
 		for (int x = 0; x < matrix.length; x++) {
 			for (int y = 0; y < matrix[0].length; y++) {
-				tot += Math.pow(Math.abs(Main.correctMatrix[x][y] - matrix[x][y]), 2);
+				tot += Math.pow(Math.abs(Main.correctMatrix[x][y][0] - matrix[x][y][0]), 2);
+				tot += Math.pow(Math.abs(Main.correctMatrix[x][y][1] - matrix[x][y][1]), 2);
+				tot += Math.pow(Math.abs(Main.correctMatrix[x][y][2] - matrix[x][y][2]), 2);
+
+
 			}
 		}
 		fitness = tot;
@@ -88,12 +92,17 @@ public class CompressionObject extends GeneticObject {
 		return new CompressionObject(newShapes);
 	}
 
-	public int[][] getMatrix() {
-		int[][] matrix = new int[Main.correctMatrix.length][Main.correctMatrix[0].length];
+	public int[][][] getMatrix() {
+		int[][][] matrix = new int[Main.correctMatrix.length][Main.correctMatrix[0].length][3];
 		for (EvolShape s : shapes) {
 			s.apply(matrix);
 		}
 		return matrix;
+	}
+	
+	public String toString(){
+		return "CompressionObject, Number of shapes: " + shapes.size();
+		
 	}
 
 }

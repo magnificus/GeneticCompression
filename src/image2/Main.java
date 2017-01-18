@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	private Image img;
-	public static int[][] correctMatrix;
+	public static int[][][] correctMatrix;
 	public static final int maxRuns = 10000000;
 
 	public static void main(String[] args) throws IOException {
@@ -25,7 +25,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		img = new Image("circlcard.png");
+		img = new Image("Lenna.png");
 
 		loadImageData(img);
 
@@ -83,24 +83,36 @@ public class Main extends Application {
 
 	private void loadImageData(Image img) {
 		PixelReader pReader = img.getPixelReader();
-		correctMatrix = new int[(int) img.getWidth()][(int) img.getHeight()];
+		correctMatrix = new int[(int) img.getWidth()][(int) img.getHeight()][3];
+//		correctMatrix = new int[(int) img.getWidth()][(int) img.getHeight()][1];
 		for (int x = 0; x < img.getWidth(); x++) {
 			for (int y = 0; y < img.getHeight(); y++) {
 				int red = (int) (pReader.getColor(x, y).getRed() * 255);
-				correctMatrix[x][y] = red;
+				int green = (int) (pReader.getColor(x, y).getGreen() * 255);
+				int blue = (int) (pReader.getColor(x, y).getBlue() * 255);
+				
+//				correctMatrix[x][y][0] = (red + green + blue) / 3;
+
+				correctMatrix[x][y][0] = red;
+				correctMatrix[x][y][1] = green;
+				correctMatrix[x][y][2] = blue;
 			}
 		}
 
 	}
 
 	private void updateImage(CompressionEnvironment e, PixelWriter pW) {
-		int[][] best = e.getBest();
+		int[][][] best = e.getBest();
 		for (int x = 0; x < img.getWidth(); ++x) {
 			for (int y = 0; y < img.getHeight(); ++y) {
-				double color = Math.min(1, (double) best[x][y] / 255);
-				color = Math.max(0, color);
+				double red = Math.min(1, (double) best[x][y][0] / 255);
+				red = Math.max(0, red);
+				double green = Math.min(1, (double) best[x][y][1] / 255);
+				green = Math.max(0, green);
+				double blue = Math.min(1, (double) best[x][y][2] / 255);
+				blue = Math.max(0, blue);
 				pW.setColor(x, y,
-						new Color(color, color, color, 1));
+						new Color(red, green, blue, 1));
 				// pW.setColor(x, y, new Color(pReader.getColor(x, y).getRed(),
 				// pReader.getColor(x, y).getRed(),
 				// pReader.getColor(x, y).getRed(), 1));
