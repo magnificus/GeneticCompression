@@ -20,12 +20,11 @@ public abstract class EvolShape {
 
 	public static final int MUTATION_COLOR_MAX_DISTANCE = 50;
 	public static final int MUTATION_DISTANCE_MAX_DISTANCE = 400;
-	
+
 	public static final float MUTATION_COLOR_CHANCE = 0.01f;
 	public static final float MUTATION_POLYGON_REMOVE_POINT_CHANCE = 0.03f;
 	public static final float MUTATION_POLYGON_ADD_POINT_CHANCE = 0.03f;
 	public static final float MUTATION_POLYGON_MOVE_CHANCE = 0.01f;
-	
 
 	public abstract void apply(int[][][] matrix);
 
@@ -152,96 +151,100 @@ public abstract class EvolShape {
 	//
 	// }
 
-	// public static class EvolTriangle extends EvolShape {
-	// public Point p1;
-	// public Point p2;
-	// public Point p3;
-	//
-	// public EvolTriangle(int strength, Point p1, Point p2, Point p3) {
-	// super(strength);
-	// this.p1 = p1;
-	// this.p2 = p2;
-	// this.p3 = p3;
-	// }
-	//
-	// @Override
-	// public void apply(int[][] matrix) {
-	// int minX = Math.min(p3.x, Math.min(p1.x, p2.x));
-	// int maxX = Math.max(p3.x, Math.max(p1.x, p2.x));
-	//
-	// int minY = Math.min(p3.y, Math.min(p1.y, p2.y));
-	// int maxY = Math.max(p3.y, Math.max(p1.y, p2.y));
-	//
-	// Point test = new Point(0, 0);
-	// for (int x = minX; x < maxX; x++) {
-	// for (int y = minY; y < maxY; y++) {
-	// test.x = x;
-	// test.y = y;
-	// if (PointInTriangle(test, p1, p2, p3)) {
-	// matrix[x][y] += strength;
-	// }
-	// }
-	// }
-	//
-	// }
-	//
-	// float sign(Point p1, Point p2, Point p3) {
-	// return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
-	// }
-	//
-	// boolean PointInTriangle(Point pt, Point v1, Point v2, Point v3) {
-	// boolean b1, b2, b3;
-	//
-	// b1 = sign(pt, v1, v2) < 0.0f;
-	// b2 = sign(pt, v2, v3) < 0.0f;
-	// b3 = sign(pt, v3, v1) < 0.0f;
-	//
-	// return ((b1 == b2) && (b2 == b3));
-	// }
-	//
-	// @Override
-	// public EvolShape duplicate() {
-	// Point newP1 = new Point(p1.x, p1.y);
-	// Point newP2 = new Point(p2.x, p2.y);
-	// Point newP3 = new Point(p3.x, p3.y);
-	//
-	// return new EvolTriangle(strength, newP1, newP2, newP3);
-	// }
-	//
-	// @Override
-	// public void mutate(Random r) {
-	// if (r.nextFloat() < 0.01f) {
-	// p1.x = Math.min(Main.correctMatrix.length - 1, Math.max(0, p1.x +
-	// r.nextInt(50) - 25));
-	// }
-	// if (r.nextFloat() < 0.01f) {
-	// p1.y = Math.min(Main.correctMatrix[0].length - 1, Math.max(0, p1.y +
-	// r.nextInt(50) - 25));
-	// }
-	// if (r.nextFloat() < 0.01f) {
-	// p2.x = Math.min(Main.correctMatrix.length - 1, Math.max(0, p2.x +
-	// r.nextInt(50) - 25));
-	// }
-	// if (r.nextFloat() < 0.01f) {
-	// p2.y = Math.min(Main.correctMatrix[0].length - 1, Math.max(0, p2.y +
-	// r.nextInt(50) - 25));
-	// }
-	// if (r.nextFloat() < 0.01f) {
-	// p3.x = Math.min(Main.correctMatrix.length - 1, Math.max(0, p3.x +
-	// r.nextInt(50) - 25));
-	// }
-	// if (r.nextFloat() < 0.01f) {
-	// p3.y = Math.min(Main.correctMatrix[0].length - 1, Math.max(0, p3.y +
-	// r.nextInt(50) - 25));
-	// }
-	// if (r.nextFloat() < 0.01f) {
-	// strength += r.nextInt(50) - 25;
-	//
-	// }
-	//
-	// }
-	//
-	// }
+	public static class EvolTriangle extends EvolShape {
+		public Point p1;
+		public Point p2;
+		public Point p3;
+
+		public EvolTriangle(int[] strength, Point p1, Point p2, Point p3) {
+			super(strength);
+			this.p1 = p1;
+			this.p2 = p2;
+			this.p3 = p3;
+		}
+
+		@Override
+		public void apply(int[][][] matrix) {
+			int minX = Math.min(p3.x, Math.min(p1.x, p2.x));
+			int maxX = Math.max(p3.x, Math.max(p1.x, p2.x));
+
+			int minY = Math.min(p3.y, Math.min(p1.y, p2.y));
+			int maxY = Math.max(p3.y, Math.max(p1.y, p2.y));
+
+			Point test = new Point(0, 0);
+			for (int x = minX; x < maxX; x++) {
+				for (int y = minY; y < maxY; y++) {
+					test.x = x;
+					test.y = y;
+
+					if (PointInTriangle(test, p1, p2, p3)) {
+						matrix[x][y][0] += strength[0];
+						matrix[x][y][1] += strength[1];
+						matrix[x][y][2] += strength[2];
+					}
+				}
+			}
+
+		}
+
+		float sign(Point p1, Point p2, Point p3) {
+			return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+		}
+
+		boolean PointInTriangle(Point pt, Point v1, Point v2, Point v3) {
+			boolean b1, b2, b3;
+
+			b1 = sign(pt, v1, v2) < 0.0f;
+			b2 = sign(pt, v2, v3) < 0.0f;
+			b3 = sign(pt, v3, v1) < 0.0f;
+
+			return ((b1 == b2) && (b2 == b3));
+		}
+
+		@Override
+		public EvolShape duplicate() {
+			Point newP1 = new Point(p1.x, p1.y);
+			Point newP2 = new Point(p2.x, p2.y);
+			Point newP3 = new Point(p3.x, p3.y);
+			int[] str = new int[] { strength[0], strength[1], strength[2] };
+			return new EvolTriangle(str, newP1, newP2, newP3);
+		}
+
+		@Override
+		public void mutate(Random r) {
+			int xLen = Main.correctMatrix.length;
+			int yLen = Main.correctMatrix[0].length;
+			if (r.nextFloat() < 0.01f) {
+				p1.x = Math.min(xLen - 1, Math.max(0, p1.x + r.nextInt(50) - 25));
+			}
+			if (r.nextFloat() < 0.01f) {
+				p1.y = Math.min(yLen - 1, Math.max(0, p1.y + r.nextInt(50) - 25));
+			}
+			if (r.nextFloat() < 0.01f) {
+				p2.x = Math.min(xLen - 1, Math.max(0, p2.x + r.nextInt(50) - 25));
+			}
+			if (r.nextFloat() < 0.01f) {
+				p2.y = Math.min(yLen - 1, Math.max(0, p2.y + r.nextInt(50) - 25));
+			}
+			if (r.nextFloat() < 0.01f) {
+				p3.x = Math.min(xLen - 1, Math.max(0, p3.x + r.nextInt(50) - 25));
+			}
+			if (r.nextFloat() < 0.01f) {
+				p3.y = Math.min(yLen - 1, Math.max(0, p3.y + r.nextInt(50) - 25));
+			}
+			if (r.nextFloat() < MUTATION_COLOR_CHANCE) {
+				strength[0] += r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2;
+			}
+			if (r.nextFloat() < MUTATION_COLOR_CHANCE) {
+				strength[1] += r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2;
+			}
+			if (r.nextFloat() < MUTATION_COLOR_CHANCE) {
+				strength[2] += r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2;
+			}
+
+		}
+
+	}
 
 	public static class EvolPolygon extends EvolShape {
 		public Polygon p;
@@ -279,7 +282,7 @@ public abstract class EvolShape {
 
 		@Override
 		public void mutate(Random r) {
-			
+
 			// mutate color
 			if (r.nextFloat() < MUTATION_COLOR_CHANCE) {
 				strength[0] += r.nextInt(MUTATION_COLOR_MAX_DISTANCE) - MUTATION_COLOR_MAX_DISTANCE / 2;
@@ -315,8 +318,9 @@ public abstract class EvolShape {
 
 				for (int i = 0; i < p.npoints; i++) {
 					if (i == pos) {
-						newP.addPoint(Math.min(xLen, Math.max(0, p.xpoints[i - 1] + r.nextInt(MUTATION_DISTANCE_MAX_DISTANCE) - MUTATION_DISTANCE_MAX_DISTANCE/2)),
-								Math.min(yLen, Math.max(0, p.ypoints[i - 1] + r.nextInt(MUTATION_DISTANCE_MAX_DISTANCE) - MUTATION_DISTANCE_MAX_DISTANCE/2)));
+						newP.addPoint(
+								Math.min(xLen, Math.max(0, p.xpoints[i - 1] + r.nextInt(MUTATION_DISTANCE_MAX_DISTANCE) - MUTATION_DISTANCE_MAX_DISTANCE / 2)),
+								Math.min(yLen, Math.max(0, p.ypoints[i - 1] + r.nextInt(MUTATION_DISTANCE_MAX_DISTANCE) - MUTATION_DISTANCE_MAX_DISTANCE / 2)));
 
 					}
 					newP.addPoint(p.xpoints[i], p.ypoints[i]);
@@ -380,7 +384,7 @@ public abstract class EvolShape {
 		//
 		// }
 
-		// case 3: {
+		// case 0: {
 		// Point p1 = new Point(r.nextInt(xLen), r.nextInt(yLen));
 		// Point p2 = new Point(r.nextInt(xLen), r.nextInt(yLen));
 		// Point p3 = new Point(r.nextInt(xLen), r.nextInt(yLen));

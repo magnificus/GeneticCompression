@@ -1,8 +1,13 @@
 package image2;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.JOptionPane;
+
 import javafx.application.Application;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,6 +17,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Main extends Application {
 	private Image img;
@@ -24,7 +30,14 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		img = new Image("circlcard.png");
+		String input = JOptionPane.showInputDialog("Path to image: ");
+
+		try{
+			img = new Image(input);
+		} catch(IllegalArgumentException e){
+			JOptionPane.showMessageDialog(null, "Invalid Path", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
 
 		loadImageData(img);
 
@@ -38,8 +51,15 @@ public class Main extends Application {
 
 		p.getChildren().add(iv1); // add imageView to stackPane
 		stage.setScene(new Scene(p));
+		
+		
 		stage.show();
-
+		
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                System.exit(0);
+            }
+        });  
 		execute(stage, e, pW);
 
 	}
@@ -57,7 +77,7 @@ public class Main extends Application {
 							@Override
 							public Void call() throws Exception {
 								updateImage(e, pW);
-								stage.show();
+//								stage.show();
 								return null;
 
 							}
